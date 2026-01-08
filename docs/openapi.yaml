@@ -364,7 +364,7 @@ components:
       properties:
         name:
           type: string
-          maxLength: 255
+          maxLength: 150
           example: "Monitor LED 27 pulgadas"
         description:
           type: string
@@ -397,7 +397,7 @@ components:
       properties:
         name:
           type: string
-          maxLength: 255
+          maxLength: 150
           example: "Laptop HP ProBook 450 G8"
         description:
           type: string

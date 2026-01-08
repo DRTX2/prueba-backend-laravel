@@ -127,7 +127,7 @@ Content-Type: application/json
 
 | Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| name | string | Sí | Nombre del producto (max: 255) |
+| name | string | Sí | Nombre del producto (max: 150, único) |
 | description | string | No | Descripción del producto (max: 5000) |
 | price | decimal | Sí | Precio base (min: 0) |
 | currency_id | integer | Sí | ID de la divisa base |
@@ -243,7 +243,7 @@ Content-Type: application/json
 
 | Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| name | string | No | Nombre del producto |
+| name | string | No | Nombre del producto (max: 150, único) |
 | description | string | No | Descripción |
 | price | decimal | No | Precio base |
 | currency_id | integer | No | ID de la divisa base |
@@ -415,5 +415,6 @@ Content-Type: application/json
 
 1. **Soft Deletes**: Los productos eliminados no se borran físicamente, se marcan con `deleted_at`.
 2. **Costo Total**: El campo `total_cost` es calculado automáticamente como: `price + tax_cost + manufacturing_cost`.
-3. **Unicidad de Precios**: No puede existir más de un precio para el mismo producto y divisa.
-4. **Paginación**: El máximo de elementos por página es 100.
+3. **Unicidad de Nombres**: No se permiten dos productos con el mismo nombre.
+4. **Unicidad de Precios**: No puede existir más de un precio para el mismo producto y divisa.
+5. **Paginación**: El máximo de elementos por página es 100.
