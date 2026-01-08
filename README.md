@@ -6,7 +6,7 @@ API RESTful desarrollada en Laravel para la gestión de productos con soporte mu
 
 - PHP 8.2 o superior
 - Composer 2.x
-- PostgreSQL 14+ (Local) o Docker Desktop (Sail)
+- PostgreSQL 14+
 - Laravel 12.x
 
 ## Instalación
@@ -28,24 +28,8 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-### Usando Docker (Laravel Sail)
-
-Si prefieres usar Docker, puedes usar Laravel Sail:
-
-```bash
-# Iniciar contenedores
-./vendor/bin/sail up -d
-
-# Ejecutar migraciones y seeders dentro del contenedor
-./vendor/bin/sail artisan migrate --seed
-
-# Ejecutar tests
-./vendor/bin/sail test
-```
-
-La API estará disponible en `http://localhost`.
-
 La API estará disponible en `http://localhost:8000/api`
+
 
 ## Modelo de Datos
 
