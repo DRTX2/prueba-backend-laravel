@@ -1,0 +1,77 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "API de Gestión de Productos",
+        "description": "API RESTful desarrollada en Laravel para la gestión de productos con soporte multi-divisa.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Servidor de desarrollo local"
+        }
+    ],
+    "paths": {
+        "/products": {
+            "get": {
+                "tags": ["Productos"],
+                "summary": "Listar productos",
+                "responses": {
+                    "200": { "description": "Lista de productos" }
+                }
+            },
+            "post": {
+                "tags": ["Productos"],
+                "summary": "Crear producto",
+                "responses": {
+                    "201": { "description": "Producto creado" }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": ["Productos"],
+                "summary": "Obtener producto",
+                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "responses": {
+                    "200": { "description": "Detalles del producto" },
+                    "404": { "description": "No encontrado" }
+                }
+            },
+            "put": {
+                "tags": ["Productos"],
+                "summary": "Actualizar producto",
+                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "responses": {
+                    "200": { "description": "Producto actualizado" }
+                }
+            },
+            "delete": {
+                "tags": ["Productos"],
+                "summary": "Eliminar producto",
+                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "responses": {
+                    "200": { "description": "Producto eliminado" }
+                }
+            }
+        },
+        "/products/{id}/prices": {
+            "get": {
+                "tags": ["Precios"],
+                "summary": "Listar precios",
+                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "responses": {
+                    "200": { "description": "Lista de precios" }
+                }
+            },
+            "post": {
+                "tags": ["Precios"],
+                "summary": "Crear precio",
+                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "responses": {
+                    "201": { "description": "Precio creado" }
+                }
+            }
+        }
+    }
+}

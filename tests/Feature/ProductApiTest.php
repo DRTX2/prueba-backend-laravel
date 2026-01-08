@@ -147,6 +147,19 @@ describe('POST /api/products', function () {
             ->assertJsonPath('data.tax_cost', 0)
             ->assertJsonPath('data.manufacturing_cost', 0);
     });
+
+    it('no permite crear un producto con un nombre que ya existe', function () {
+        Product::factory()->create(['name' => 'Producto Duplicado', 'currency_id' => $this->currency->id]);
+
+        $response = $this->postJson('/api/products', [
+            'name' => 'Producto Duplicado',
+            'price' => 100,
+            'currency_id' => $this->currency->id,
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name']);
+    });
 });
 
 describe('GET /api/products/{id}', function () {
