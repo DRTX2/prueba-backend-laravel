@@ -1,9 +1,17 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "title": "API de Gestión de Productos",
-        "description": "API RESTful desarrollada en Laravel para la gestión de productos con soporte multi-divisa.",
-        "version": "1.0.0"
+        "title": "API de Gesti\u00f3n de Productos",
+        "description": "API RESTful desarrollada en Laravel para la gesti\u00f3n de productos con soporte multi-divisa.\n\n## Caracter\u00edsticas principales:\n- CRUD completo de productos\n- Gesti\u00f3n de precios en m\u00faltiples divisas\n- Soft deletes para productos\n- Validaciones robustas\n- Respuestas estandarizadas en JSON\n",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Desarrollador",
+            "email": "contacto@ejemplo.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
     },
     "servers": [
         {
@@ -11,65 +19,700 @@
             "description": "Servidor de desarrollo local"
         }
     ],
+    "tags": [
+        {
+            "name": "Productos",
+            "description": "Operaciones CRUD para gesti\u00f3n de productos"
+        },
+        {
+            "name": "Precios",
+            "description": "Gesti\u00f3n de precios en diferentes divisas"
+        }
+    ],
     "paths": {
         "/products": {
             "get": {
-                "tags": ["Productos"],
+                "tags": [
+                    "Productos"
+                ],
                 "summary": "Listar productos",
+                "description": "Obtiene una lista paginada de todos los productos disponibles.",
+                "operationId": "listProducts",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "N\u00famero de elementos por p\u00e1gina (1-100)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "minimum": 1,
+                            "maximum": 100
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "N\u00famero de p\u00e1gina",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": { "description": "Lista de productos" }
+                    "200": {
+                        "description": "Lista de productos obtenida exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Product"
+                                                    }
+                                                },
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/PaginationMeta"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 }
             },
             "post": {
-                "tags": ["Productos"],
+                "tags": [
+                    "Productos"
+                ],
                 "summary": "Crear producto",
+                "description": "Crea un nuevo producto en el sistema.",
+                "operationId": "createProduct",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProductRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "201": { "description": "Producto creado" }
+                    "201": {
+                        "description": "Producto creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/Product"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validaci\u00f3n",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
         "/products/{id}": {
             "get": {
-                "tags": ["Productos"],
+                "tags": [
+                    "Productos"
+                ],
                 "summary": "Obtener producto",
-                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "description": "Obtiene los detalles de un producto espec\u00edfico por su ID.",
+                "operationId": "getProduct",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ProductId"
+                    }
+                ],
                 "responses": {
-                    "200": { "description": "Detalles del producto" },
-                    "404": { "description": "No encontrado" }
+                    "200": {
+                        "description": "Producto obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/Product"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                }
+                            }
+                        }
+                    }
                 }
             },
             "put": {
-                "tags": ["Productos"],
+                "tags": [
+                    "Productos"
+                ],
                 "summary": "Actualizar producto",
-                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "description": "Actualiza los datos de un producto existente. Solo se actualizan los campos enviados.",
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ProductId"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "200": { "description": "Producto actualizado" }
+                    "200": {
+                        "description": "Producto actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/Product"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validaci\u00f3n",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
                 }
             },
             "delete": {
-                "tags": ["Productos"],
+                "tags": [
+                    "Productos"
+                ],
                 "summary": "Eliminar producto",
-                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "description": "Elimina un producto (soft delete). El producto no se borra f\u00edsicamente.",
+                "operationId": "deleteProduct",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ProductId"
+                    }
+                ],
                 "responses": {
-                    "200": { "description": "Producto eliminado" }
+                    "200": {
+                        "description": "Producto eliminado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
         "/products/{id}/prices": {
             "get": {
-                "tags": ["Precios"],
-                "summary": "Listar precios",
-                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "tags": [
+                    "Precios"
+                ],
+                "summary": "Listar precios de un producto",
+                "description": "Obtiene todos los precios de un producto en diferentes divisas.",
+                "operationId": "listProductPrices",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ProductId"
+                    }
+                ],
                 "responses": {
-                    "200": { "description": "Lista de precios" }
+                    "200": {
+                        "description": "Precios obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ProductPrice"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                }
+                            }
+                        }
+                    }
                 }
             },
             "post": {
-                "tags": ["Precios"],
-                "summary": "Crear precio",
-                "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+                "tags": [
+                    "Precios"
+                ],
+                "summary": "Crear precio para producto",
+                "description": "Crea un nuevo precio para un producto en una divisa espec\u00edfica.",
+                "operationId": "createProductPrice",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ProductId"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProductPriceRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "201": { "description": "Precio creado" }
+                    "201": {
+                        "description": "Precio creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/ProductPrice"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validaci\u00f3n",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "ProductId": {
+                "name": "id",
+                "in": "path",
+                "description": "ID del producto",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "schemas": {
+            "Currency": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "D\u00f3lar Estadounidense"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "example": "USD"
+                    },
+                    "exchange_rate": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 1.0
+                    }
+                }
+            },
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Laptop HP ProBook 450"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "Laptop profesional con procesador Intel Core i7"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 899.99
+                    },
+                    "currency": {
+                        "$ref": "#/components/schemas/Currency"
+                    },
+                    "tax_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 143.99
+                    },
+                    "manufacturing_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 450.0
+                    },
+                    "total_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 1493.98
+                    },
+                    "prices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductPrice"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-01-08T14:30:00+00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-01-08T14:30:00+00:00"
+                    }
+                }
+            },
+            "ProductPrice": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "product_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "currency": {
+                        "$ref": "#/components/schemas/Currency"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "example": 827.99
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "CreateProductRequest": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "price",
+                    "currency_id"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 150,
+                        "example": "Monitor LED 27 pulgadas"
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 5000,
+                        "nullable": true,
+                        "example": "Monitor con panel IPS y resoluci\u00f3n 4K"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0,
+                        "example": 549.99
+                    },
+                    "currency_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "tax_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0,
+                        "default": 0,
+                        "example": 87.99
+                    },
+                    "manufacturing_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0,
+                        "default": 0,
+                        "example": 220.0
+                    }
+                }
+            },
+            "UpdateProductRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 150,
+                        "example": "Laptop HP ProBook 450 G8"
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 5000,
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0,
+                        "example": 949.99
+                    },
+                    "currency_id": {
+                        "type": "integer"
+                    },
+                    "tax_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0
+                    },
+                    "manufacturing_cost": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0
+                    }
+                }
+            },
+            "CreateProductPriceRequest": {
+                "type": "object",
+                "required": [
+                    "currency_id",
+                    "price"
+                ],
+                "properties": {
+                    "currency_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0,
+                        "example": 827.99
+                    }
+                }
+            },
+            "SuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Operaci\u00f3n realizada exitosamente."
+                    }
+                }
+            },
+            "NotFoundResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Producto no encontrado."
+                    }
+                }
+            },
+            "ValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Error de validaci\u00f3n"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "example": {
+                            "name": [
+                                "El nombre del producto es obligatorio."
+                            ],
+                            "price": [
+                                "El precio debe ser un valor num\u00e9rico."
+                            ]
+                        }
+                    }
+                }
+            },
+            "PaginationMeta": {
+                "type": "object",
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 5
+                    }
                 }
             }
         }
