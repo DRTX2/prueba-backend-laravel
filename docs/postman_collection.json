@@ -1,0 +1,208 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "API Gestión de Productos",
+    "description": "API RESTful para la gestión de productos con soporte multi-divisa desarrollada en Laravel.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Productos",
+      "description": "Operaciones CRUD para gestión de productos",
+      "item": [
+        {
+          "name": "Listar Productos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products?per_page=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "Elementos por página (1-100)"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número de página"
+                }
+              ]
+            },
+            "description": "Obtiene una lista paginada de todos los productos disponibles."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop HP ProBook 450\",\n  \"description\": \"Laptop profesional con procesador Intel Core i7, 16GB RAM, 512GB SSD.\",\n  \"price\": 899.99,\n  \"currency_id\": 1,\n  \"tax_cost\": 143.99,\n  \"manufacturing_cost\": 450.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": ["{{base_url}}"],
+              "path": ["products"]
+            },
+            "description": "Crea un nuevo producto en el sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Producto por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "description": "Obtiene los detalles de un producto específico por su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Producto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop HP ProBook 450 G8\",\n  \"price\": 949.99,\n  \"tax_cost\": 151.99\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "description": "Actualiza los datos de un producto existente. Solo se actualizan los campos enviados."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Producto",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "description": "Elimina un producto (soft delete). El producto no se borra físicamente."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Precios de Productos",
+      "description": "Gestión de precios en diferentes divisas",
+      "item": [
+        {
+          "name": "Listar Precios de un Producto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/1/prices",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1", "prices"]
+            },
+            "description": "Obtiene todos los precios de un producto en diferentes divisas."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Precio para Producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency_id\": 2,\n  \"price\": 827.99\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/1/prices",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1", "prices"]
+            },
+            "description": "Crea un nuevo precio para un producto en una divisa específica."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

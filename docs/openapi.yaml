@@ -1,0 +1,490 @@
+openapi: 3.0.3
+info:
+  title: API de Gestión de Productos
+  description: |
+    API RESTful desarrollada en Laravel para la gestión de productos con soporte multi-divisa.
+    
+    ## Características principales:
+    - CRUD completo de productos
+    - Gestión de precios en múltiples divisas
+    - Soft deletes para productos
+    - Validaciones robustas
+    - Respuestas estandarizadas en JSON
+  version: 1.0.0
+  contact:
+    name: Desarrollador
+    email: contacto@ejemplo.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000/api
+    description: Servidor de desarrollo local
+
+tags:
+  - name: Productos
+    description: Operaciones CRUD para gestión de productos
+  - name: Precios
+    description: Gestión de precios en diferentes divisas
+
+paths:
+  /products:
+    get:
+      tags:
+        - Productos
+      summary: Listar productos
+      description: Obtiene una lista paginada de todos los productos disponibles.
+      operationId: listProducts
+      parameters:
+        - name: per_page
+          in: query
+          description: Número de elementos por página (1-100)
+          required: false
+          schema:
+            type: integer
+            default: 15
+            minimum: 1
+            maximum: 100
+        - name: page
+          in: query
+          description: Número de página
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+      responses:
+        '200':
+          description: Lista de productos obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+    post:
+      tags:
+        - Productos
+      summary: Crear producto
+      description: Crea un nuevo producto en el sistema.
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Product'
+        '422':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /products/{id}:
+    get:
+      tags:
+        - Productos
+      summary: Obtener producto
+      description: Obtiene los detalles de un producto específico por su ID.
+      operationId: getProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Producto obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Product'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+    put:
+      tags:
+        - Productos
+      summary: Actualizar producto
+      description: Actualiza los datos de un producto existente. Solo se actualizan los campos enviados.
+      operationId: updateProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Product'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '422':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+    delete:
+      tags:
+        - Productos
+      summary: Eliminar producto
+      description: Elimina un producto (soft delete). El producto no se borra físicamente.
+      operationId: deleteProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Producto eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /products/{id}/prices:
+    get:
+      tags:
+        - Precios
+      summary: Listar precios de un producto
+      description: Obtiene todos los precios de un producto en diferentes divisas.
+      operationId: listProductPrices
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Precios obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ProductPrice'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+    post:
+      tags:
+        - Precios
+      summary: Crear precio para producto
+      description: Crea un nuevo precio para un producto en una divisa específica.
+      operationId: createProductPrice
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductPriceRequest'
+      responses:
+        '201':
+          description: Precio creado exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProductPrice'
+        '404':
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '422':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+components:
+  parameters:
+    ProductId:
+      name: id
+      in: path
+      description: ID del producto
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+
+  schemas:
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Dólar Estadounidense"
+        symbol:
+          type: string
+          example: "USD"
+        exchange_rate:
+          type: number
+          format: double
+          example: 1.0
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Laptop HP ProBook 450"
+        description:
+          type: string
+          nullable: true
+          example: "Laptop profesional con procesador Intel Core i7"
+        price:
+          type: number
+          format: double
+          example: 899.99
+        currency:
+          $ref: '#/components/schemas/Currency'
+        tax_cost:
+          type: number
+          format: double
+          example: 143.99
+        manufacturing_cost:
+          type: number
+          format: double
+          example: 450.0
+        total_cost:
+          type: number
+          format: double
+          example: 1493.98
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductPrice'
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-01-08T14:30:00+00:00"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-01-08T14:30:00+00:00"
+
+    ProductPrice:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        currency:
+          $ref: '#/components/schemas/Currency'
+        price:
+          type: number
+          format: double
+          example: 827.99
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateProductRequest:
+      type: object
+      required:
+        - name
+        - price
+        - currency_id
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: "Monitor LED 27 pulgadas"
+        description:
+          type: string
+          maxLength: 5000
+          nullable: true
+          example: "Monitor con panel IPS y resolución 4K"
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 549.99
+        currency_id:
+          type: integer
+          example: 1
+        tax_cost:
+          type: number
+          format: double
+          minimum: 0
+          default: 0
+          example: 87.99
+        manufacturing_cost:
+          type: number
+          format: double
+          minimum: 0
+          default: 0
+          example: 220.0
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: "Laptop HP ProBook 450 G8"
+        description:
+          type: string
+          maxLength: 5000
+          nullable: true
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 949.99
+        currency_id:
+          type: integer
+        tax_cost:
+          type: number
+          format: double
+          minimum: 0
+        manufacturing_cost:
+          type: number
+          format: double
+          minimum: 0
+
+    CreateProductPriceRequest:
+      type: object
+      required:
+        - currency_id
+        - price
+      properties:
+        currency_id:
+          type: integer
+          example: 2
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 827.99
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Operación realizada exitosamente."
+
+    NotFoundResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Producto no encontrado."
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Error de validación"
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            name: ["El nombre del producto es obligatorio."]
+            price: ["El precio debe ser un valor numérico."]
+
+    PaginationMeta:
+      type: object
+      properties:
+        current_page:
+          type: integer
+          example: 1
+        last_page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 15
+        total:
+          type: integer
+          example: 5

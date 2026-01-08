@@ -1,0 +1,311 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-01-08T14:37:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_products_api",
+      "parentId": null,
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "name": "API Gestión de Productos",
+      "description": "API RESTful para la gestión de productos con soporte multi-divisa desarrollada en Laravel.",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_products_api",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "name": "Local",
+      "data": {
+        "base_url": "http://localhost:8000/api"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_products",
+      "parentId": "wrk_products_api",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "name": "Productos",
+      "description": "Operaciones CRUD para gestión de productos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_prices",
+      "parentId": "wrk_products_api",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "name": "Precios de Productos",
+      "description": "Gestión de precios en diferentes divisas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 0,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_list_products",
+      "parentId": "fld_products",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products",
+      "name": "Listar Productos",
+      "description": "Obtiene una lista paginada de todos los productos disponibles.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_1",
+          "name": "per_page",
+          "value": "15",
+          "description": "Elementos por página (1-100)",
+          "disabled": false
+        },
+        {
+          "id": "pair_2",
+          "name": "page",
+          "value": "1",
+          "description": "Número de página",
+          "disabled": false
+        }
+      ],
+      "headers": [
+        {
+          "id": "pair_3",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -4,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_product",
+      "parentId": "fld_products",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products",
+      "name": "Crear Producto",
+      "description": "Crea un nuevo producto en el sistema.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Laptop HP ProBook 450\",\n  \"description\": \"Laptop profesional con procesador Intel Core i7, 16GB RAM, 512GB SSD.\",\n  \"price\": 899.99,\n  \"currency_id\": 1,\n  \"tax_cost\": 143.99,\n  \"manufacturing_cost\": 450.00\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_4",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_5",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -3,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_product",
+      "parentId": "fld_products",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products/1",
+      "name": "Obtener Producto por ID",
+      "description": "Obtiene los detalles de un producto específico por su ID.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_6",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -2,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_product",
+      "parentId": "fld_products",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products/1",
+      "name": "Actualizar Producto",
+      "description": "Actualiza los datos de un producto existente.",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Laptop HP ProBook 450 G8\",\n  \"price\": 949.99,\n  \"tax_cost\": 151.99\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_7",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_8",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_product",
+      "parentId": "fld_products",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products/1",
+      "name": "Eliminar Producto",
+      "description": "Elimina un producto (soft delete).",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_9",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 0,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_prices",
+      "parentId": "fld_prices",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products/1/prices",
+      "name": "Listar Precios de un Producto",
+      "description": "Obtiene todos los precios de un producto en diferentes divisas.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_10",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_price",
+      "parentId": "fld_prices",
+      "modified": 1704729420000,
+      "created": 1704729420000,
+      "url": "{{ _.base_url }}/products/1/prices",
+      "name": "Crear Precio para Producto",
+      "description": "Crea un nuevo precio para un producto en una divisa específica.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"currency_id\": 2,\n  \"price\": 827.99\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_11",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_12",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 0,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    }
+  ]
+}
