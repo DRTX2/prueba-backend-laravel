@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 150);
+            $table->string('name', 150)->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 15, 2);
             $table->foreignId('currency_id')->constrained('currencies')->onDelete('restrict');

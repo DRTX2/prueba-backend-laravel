@@ -22,7 +22,7 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:150|unique:products,name',
             'description' => 'nullable|string|max:5000',
             'price' => 'required|numeric|min:0|max:999999999999.99',
             'currency_id' => 'required|integer|exists:currencies,id',
