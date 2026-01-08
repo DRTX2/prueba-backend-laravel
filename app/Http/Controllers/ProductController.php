@@ -11,9 +11,6 @@ use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-/**
- * @OA\PathItem(path="/api")
- */
 class ProductController extends Controller
 {
     public function __construct(
@@ -21,13 +18,7 @@ class ProductController extends Controller
     ) {}
 
     /**
-     * @OA\Get(
-     *     path="/products",
-     *     tags={"Productos"},
-     *     summary="Listar productos",
-     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer", default=15)),
-     *     @OA\Response(response=200, description="Lista de productos")
-     * )
+     * Obtener lista de productos.
      */
     public function index(Request $request): JsonResponse
     {
@@ -48,14 +39,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/products",
-     *     tags={"Productos"},
-     *     summary="Crear producto",
-     *     @OA\RequestBody(required=true, @OA\JsonContent(type="object")),
-     *     @OA\Response(response=201, description="Producto creado"),
-     *     @OA\Response(response=422, description="Error de validación")
-     * )
+     * Crear un nuevo producto.
      */
     public function store(StoreProductRequest $request): JsonResponse
     {
@@ -69,14 +53,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/products/{id}",
-     *     tags={"Productos"},
-     *     summary="Obtener producto",
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Detalles del producto"),
-     *     @OA\Response(response=404, description="No encontrado")
-     * )
+     * Obtener un producto por ID.
      */
     public function show(int $id): JsonResponse
     {
@@ -97,15 +74,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/products/{id}",
-     *     tags={"Productos"},
-     *     summary="Actualizar producto",
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(required=true, @OA\JsonContent(type="object")),
-     *     @OA\Response(response=200, description="Producto actualizado"),
-     *     @OA\Response(response=404, description="No encontrado")
-     * )
+     * Actualizar un producto.
      */
     public function update(UpdateProductRequest $request, int $id): JsonResponse
     {
@@ -128,14 +97,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Delete(
-     *     path="/products/{id}",
-     *     tags={"Productos"},
-     *     summary="Eliminar producto",
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Producto eliminado"),
-     *     @OA\Response(response=404, description="No encontrado")
-     * )
+     * Eliminar un producto.
      */
     public function destroy(int $id): JsonResponse
     {
@@ -157,13 +119,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/products/{id}/prices",
-     *     tags={"Precios"},
-     *     summary="Listar precios del producto",
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Lista de precios")
-     * )
+     * Obtener lista de precios de un producto.
      */
     public function getPrices(int $productId): JsonResponse
     {
@@ -186,15 +142,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/products/{id}/prices",
-     *     tags={"Precios"},
-     *     summary="Crear precio",
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(required=true, @OA\JsonContent(type="object")),
-     *     @OA\Response(response=201, description="Precio creado"),
-     *     @OA\Response(response=422, description="Error de validación")
-     * )
+     * Crear un nuevo precio para un producto.
      */
     public function storePrice(StoreProductPriceRequest $request, int $productId): JsonResponse
     {
